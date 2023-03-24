@@ -61,7 +61,7 @@ interface ListProps<T, F> {
  *
  * This component has no state in it. The state must be kept by an smarter component (higher in the herarchy)
  */
-export default function List<T extends { id: any }, F extends keyof T>({
+export default function List<T extends { id: string | number }, F extends keyof T>({
   header,
   items,
   itemComposition,
@@ -286,7 +286,7 @@ ListProps<T, F>): JSX.Element {
   );
 }
 
-const useIsScrollable = (dependencies: any[]) => {
+const useIsScrollable = (dependencies) => {
   const [node, setNode] = useState<HTMLDivElement>();
   const ref = useCallback((node: HTMLDivElement) => {
     setNode(node);

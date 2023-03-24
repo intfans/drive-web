@@ -34,7 +34,7 @@ interface ItemProps<T> {
 
 const MENU_BUTTON_HEIGHT = 40;
 
-export default function ListItem<T extends { id: string }>({
+export default function ListItem<T extends { id: string | number }>({
   item,
   itemComposition,
   selected,

@@ -1,14 +1,14 @@
 import { X } from 'phosphor-react';
-import React from 'react';
+import { FC } from 'react';
 import { ReactComponent as SendIcon } from 'assets/images/shared-file/visual.svg';
 import BackgroundImage from 'assets/images/shared-file/banner-bg.png';
 
-export interface Props {
+interface SendBannerProps {
   sendBannerVisible: boolean;
   setIsSendBannerVisible: (value: boolean) => void;
 }
 
-const SendBanner = (props: Props) => {
+const SendBanner: FC<SendBannerProps> = (props: SendBannerProps) => {
   const onClose = () => {
     props.setIsSendBannerVisible(false);
   };

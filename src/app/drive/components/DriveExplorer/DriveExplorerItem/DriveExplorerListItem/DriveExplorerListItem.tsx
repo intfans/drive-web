@@ -1,5 +1,5 @@
 import { Fragment, useEffect } from 'react';
-import { PencilSimple, Link, Trash, DownloadSimple } from 'phosphor-react';
+import { PencilSimple, Link } from 'phosphor-react';
 import { items } from '@internxt/lib';
 import sizeService from '../../../../../drive/services/size.service';
 import dateService from '../../../../../core/services/date.service';
@@ -12,7 +12,7 @@ import useDriveItemStoreProps from '../hooks/useDriveStoreProps';
 import './DriveExplorerListItem.scss';
 
 const DriveExplorerListItem = ({ item }: DriveExplorerItemProps): JSX.Element => {
-  const { isItemSelected, isSomeItemSelected, isEditingName, dirtyName } = useDriveItemStoreProps();
+  const { isItemSelected, isEditingName, dirtyName } = useDriveItemStoreProps();
   const {
     nameInputRef,
     onNameChanged,
@@ -20,9 +20,6 @@ const DriveExplorerListItem = ({ item }: DriveExplorerItemProps): JSX.Element =>
     onNameClicked,
     onEditNameButtonClicked,
     onNameEnterKeyDown,
-    onDownloadButtonClicked,
-    onDeleteButtonClicked,
-    onShareButtonClicked,
     onItemClicked,
     onItemDoubleClicked,
   } = useDriveItemActions(item);
@@ -99,7 +96,7 @@ const DriveExplorerListItem = ({ item }: DriveExplorerItemProps): JSX.Element =>
         <div className="flex h-10 w-10 justify-center drop-shadow-soft filter">
           <ItemIconComponent className="h-full" />
           {itemIsShared && (
-            <Link className="group-hover:border-slate-50 absolute -bottom-1 -right-2 ml-3 flex h-5 w-5 flex-col items-center justify-center place-self-end rounded-full rounded-full border-2 border-white bg-primary p-0.5 text-white group-active:border-blue-100" />
+            <Link className="group-hover:border-slate-50 absolute -bottom-1 -right-2 ml-3 flex h-5 w-5 flex-col items-center justify-center place-self-end rounded-full border-2 border-white bg-primary p-0.5 text-white group-active:border-blue-100" />
           )}
         </div>
       </div>

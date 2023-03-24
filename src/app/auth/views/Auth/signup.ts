@@ -45,7 +45,7 @@ const signup = async (data, dispatch, doRegister, setLoading, setError?) => {
       'noopener',
     );
   } catch (err: unknown) {
-    setError(errorService.castError(err).message);
+    setError?.(errorService.castError(err).message);
     setLoading(false);
   }
 };

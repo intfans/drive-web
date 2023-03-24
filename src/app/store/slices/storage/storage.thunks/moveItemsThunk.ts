@@ -101,7 +101,7 @@ export const moveItemsThunkExtraReducers = (builder: ActionReducerMapBuilder<Sto
   builder
     .addCase(moveItemsThunk.pending, () => undefined)
     .addCase(moveItemsThunk.fulfilled, () => undefined)
-    .addCase(moveItemsThunk.rejected, (state, action) => {
+    .addCase(moveItemsThunk.rejected, () => {
       notificationsService.show({
         text: 'error',
         type: ToastType.Error,

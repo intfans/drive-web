@@ -1,4 +1,4 @@
-import React, { MouseEvent, ReactNode } from 'react';
+import { FC, MouseEvent } from 'react';
 import {
   PencilSimple,
   Trash,
@@ -29,7 +29,7 @@ interface FileDropdownActionsProps {
   isTrash?: boolean;
 }
 
-const FileDropdownActions = (props: FileDropdownActionsProps) => {
+const FileDropdownActions: FC<FileDropdownActionsProps> = (props: FileDropdownActionsProps) => {
   const { translate } = useTranslationContext();
   const onDownloadButtonClicked = (e: MouseEvent): void => {
     const { onDownloadButtonClicked } = props;
@@ -65,12 +65,6 @@ const FileDropdownActions = (props: FileDropdownActionsProps) => {
     const { onShareDeleteButtonClicked } = props;
 
     onShareDeleteButtonClicked && onShareDeleteButtonClicked(e);
-  };
-
-  const onInfoButtonClicked = (e: MouseEvent): void => {
-    const { onInfoButtonClicked } = props;
-
-    onInfoButtonClicked && onInfoButtonClicked(e);
   };
 
   const onRecoverButtonClicked = (e: MouseEvent): void => {
@@ -142,13 +136,6 @@ const FileDropdownActions = (props: FileDropdownActionsProps) => {
           <span>{translate('drive.dropdown.rename')}</span>
         </Dropdown.Item>
       ) : null}
-
-      {/* {!hiddenActions.includes(DriveItemAction.Info) ? (
-          <Dropdown.Item id="info" onClick={onInfoButtonClicked}>
-            <ArrowsOutCardinal className="mr-1 h-5 w-5 text-blue-60" />
-            <span>Move</span>
-          </Dropdown.Item>
-        ) : null} */}
       {!hiddenActions.includes(DriveItemAction.Download) && !props.isTrash ? (
         <Dropdown.Item id="download" onClick={onDownloadButtonClicked}>
           <DownloadSimple className="mr-1 h-5 w-5 text-blue-60" />

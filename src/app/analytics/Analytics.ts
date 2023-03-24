@@ -20,7 +20,7 @@ export default class Analytics {
     return Analytics.instance;
   }
 
-  public track(eventName, properties) {
+  public track(eventName: string, properties: unknown): void {
     try {
       Analytics.instance.track(eventName, properties);
     } catch (err) {

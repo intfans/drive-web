@@ -5,7 +5,6 @@ import { DriveFolderData, FolderTree } from '../../../types';
 import folderService from '../../folder.service';
 import { FlatFolderZip } from 'app/core/services/stream.service';
 import network from 'app/network';
-import analyticsService from 'app/analytics/services/analytics.service';
 
 /**
  * @description Downloads a folder using File System Access API

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { FC, useState } from 'react';
 import { WarningCircle } from 'phosphor-react';
 import PasswordInput from 'app/share/components/ShareItemDialog/components/PasswordInput';
 import { ReactComponent as LockLogo } from 'assets/icons/Lock.svg';
@@ -12,7 +12,7 @@ export interface ShareItemPwdViewProps {
   setItemPassword: (password: string) => void;
 }
 
-const ShareItemPwdView = (props: ShareItemPwdViewProps) => {
+const ShareItemPwdView: FC<ShareItemPwdViewProps> = (props) => {
   const { translate } = useTranslationContext();
   const { onPasswordSubmitted, setItemPassword, itemPassword } = props;
   const [onPasswordError, setOnPasswordError] = useState(false);

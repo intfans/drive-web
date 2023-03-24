@@ -2,7 +2,6 @@ import streamSaver from 'streamsaver';
 
 import analyticsService from 'app/analytics/services/analytics.service';
 import { TrackingPlan } from 'app/analytics/TrackingPlan';
-import localStorageService from 'app/core/services/local-storage.service';
 import { DriveFileData } from '../../types';
 import downloadFileFromBlob from './downloadFileFromBlob';
 import fetchFileStream from './fetchFileStream';

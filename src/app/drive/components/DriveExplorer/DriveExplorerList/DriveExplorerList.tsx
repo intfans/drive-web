@@ -1,6 +1,4 @@
 import React, { memo, useEffect, useState } from 'react';
-import UilArrowDown from '@iconscout/react-unicons/icons/uil-arrow-down';
-import UilArrowUp from '@iconscout/react-unicons/icons/uil-arrow-up';
 import { connect } from 'react-redux';
 
 import DriveExplorerListItem from '../DriveExplorerItem/DriveExplorerListItem/DriveExplorerListItem';
@@ -85,54 +83,10 @@ const DriveExplorerList: React.FC<DriveExplorerListProps> = memo((props) => {
     }
   }, [props.items.length]);
 
-  const hasItems = props.items.length > 0;
-
-  const itemsList = (): JSX.Element[] => {
-    return props.items.map((item: DriveItemData) => {
-      const itemParentId = item.parentId || item.folderId;
-      const itemKey = `${item.isFolder ? 'folder' : 'file'}-${item.id}-${itemParentId}`;
-
-      return <DriveExplorerListItem isTrash={props.isTrash} key={itemKey} item={item} />;
-    });
-  };
-
-  const itemsFileList = (): JSX.Element[] => {
-    return props.items
-      .filter((item) => !item.isFolder)
-      .map((item: DriveItemData) => {
-        const itemParentId = item.parentId || item.folderId;
-        const itemKey = `'file'-${item.id}-${itemParentId}`;
-
-        return <DriveExplorerListItem key={itemKey} item={item} isTrash={props.isTrash} />;
-      });
-  };
-
-  const itemsFolderList = (): JSX.Element[] => {
-    return props.items
-      .filter((item) => item.isFolder)
-      .map((item: DriveItemData) => {
-        const itemParentId = item.parentId || item.folderId;
-        const itemKey = `'folder'-${item.id}-${itemParentId}`;
-
-        return <DriveExplorerListItem key={itemKey} item={item} isTrash={props.isTrash} />;
-      });
-  };
-
-  const isAllSelected = () => {
-    const isAllItemsSelected = props.selectedItems.length === props.items.length && props.items.length > 0;
-    return isAllItemsSelected;
-  };
-
   const loadingSkeleton = (): JSX.Element[] =>
     Array(60)
       .fill(0)
       .map((n, i) => <DriveListItemSkeleton key={i} />);
-
-  const onSelectAllButtonClicked = () => {
-    const { dispatch, items } = props;
-    setIsAllSelectedEnabled(!isAllSelectedEnabled);
-    isAllSelected() ? dispatch(storageActions.clearSelectedItems()) : dispatch(storageActions.selectItems(items));
-  };
 
   const onSelectedItemsChanged = (changes: { props: DriveItemData; value: boolean }[]) => {
     let updatedSelectedItems = props.selectedItems;
@@ -143,7 +97,7 @@ const DriveExplorerList: React.FC<DriveExplorerListProps> = memo((props) => {
         updatedSelectedItems = [...updatedSelectedItems, change.props];
       }
     }
-    //  const deselecteditems = props.selectedItems.filter((selectedItem) => updatedSelectedItems.map().includes())
+
     const deselecteditems = findUniqueItems<DriveItemData>(updatedSelectedItems, props.selectedItems);
     dispatch(storageActions.deselectItems(deselecteditems));
     dispatch(storageActions.selectItems(updatedSelectedItems));
@@ -159,11 +113,6 @@ const DriveExplorerList: React.FC<DriveExplorerListProps> = memo((props) => {
           : OrderDirection.Desc
         : OrderDirection.Asc;
     dispatch(storageActions.setOrder({ by: value.field, direction }));
-  };
-
-  const sortButtonFactory = () => {
-    const IconComponent = order.direction === OrderDirection.Desc ? UilArrowDown : UilArrowUp;
-    return <IconComponent className="ml-2" />;
   };
 
   function handleMouseEnter() {

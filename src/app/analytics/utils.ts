@@ -17,7 +17,7 @@ export function getCookie(cookieName: string): string {
   return cookie[cookieName];
 }
 
-export function sendAnalyticsError(message: string) {
+export function sendAnalyticsError(message: string): void {
   httpService.post(
     `${process.env.REACT_APP_CDP_DATA_PLANE}/v1/track`,
     {

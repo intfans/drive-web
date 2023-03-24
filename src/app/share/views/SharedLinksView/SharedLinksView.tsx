@@ -2,9 +2,8 @@ import dateService from 'app/core/services/date.service';
 import BaseButton from 'app/shared/components/forms/BaseButton';
 import { Trash, Link } from 'phosphor-react';
 import List from 'app/shared/components/List';
-import { Dialog, Transition } from '@headlessui/react';
 import DeleteDialog from '../../../shared/components/Dialog/Dialog';
-import { useState, Fragment, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import iconService from 'app/drive/services/icon.service';
 import copy from 'copy-to-clipboard';
 import Empty from 'app/shared/components/Empty/Empty';
@@ -58,8 +57,6 @@ export default function SharedLinksView(): JSX.Element {
 
   const [isDeleteDialogModalOpen, setIsDeleteDialogModalOpen] = useState<boolean>(false);
 
-  const [isUpdateLinkModalOpen, setIsUpdateLinkModalOpen] = useState(false);
-  const [linkToUpdate, setLinkToUpdate] = useState<(ListShareLinksItem & { code: string }) | undefined>(undefined);
   const dispatch = useAppDispatch();
 
   function closeConfirmDelete() {
@@ -94,14 +91,6 @@ export default function SharedLinksView(): JSX.Element {
     setPage(page);
 
     setIsLoading(false);
-  }
-
-  function updateLinkItem(item: ListShareLinksItem & { code: string }) {
-    const index = shareLinks.findIndex((i) => item.id === i.id);
-    const updatedList = shareLinks;
-    updatedList[index] = item;
-    setShareLinks(updatedList);
-    setIsUpdateLinkModalOpen(false);
   }
 
   function onNextPage() {
@@ -180,17 +169,14 @@ export default function SharedLinksView(): JSX.Element {
     />
   );
 
-  function onOpenLinkUpdateModal(item: ListShareLinksItem & { code: string }) {
-    const mnemonic = localStorageService.getUser()!.mnemonic;
-    setLinkToUpdate(item);
-    setIsUpdateLinkModalOpen(true);
-  }
-
   const copyLink = (item) => {
     const itemType = item.isFolder ? 'folder' : 'file';
     const encryptedCode = item.code || item.encryptedCode;
-    const plainCode = aes.decrypt(encryptedCode, localStorageService.getUser()!.mnemonic);
-    copyShareLink(itemType, plainCode, item.token);
+    const mnemonic = localStorageService.getUser()?.mnemonic;
+    if (mnemonic) {
+      const plainCode = aes.decrypt(encryptedCode, mnemonic);
+      copyShareLink(itemType, plainCode, item.token);
+    }
   };
 
   const openLinkSettings = (item) => {
@@ -442,7 +428,6 @@ export default function SharedLinksView(): JSX.Element {
           }}
           selectedItems={selectedItems}
           keyboardShortcuts={['unselectAll', 'selectAll', 'multiselect']}
-          disableKeyboardShortcuts={isUpdateLinkModalOpen}
           onOrderByChanged={onOrderByChanged}
           orderBy={orderBy}
           onSelectedItemsChanged={onSelectedItemsChanged}
@@ -476,129 +461,6 @@ export default function SharedLinksView(): JSX.Element {
         }
         primaryActionColor="danger"
       />
-      {/* <UpdateLinkModal
-        isOpen={isUpdateLinkModalOpen}
-        onClose={() => setIsUpdateLinkModalOpen(false)}
-        onShareUpdated={updateLinkItem}
-        linkToUpdate={linkToUpdate!}
-      /> */}
     </div>
-  );
-}
-
-function UpdateLinkModal({
-  isOpen,
-  onClose,
-  onShareUpdated,
-  linkToUpdate,
-}: {
-  isOpen: boolean;
-  linkToUpdate: ListShareLinksItem & { code: string };
-  onClose: () => void;
-  onShareUpdated: (updatedItem: ListShareLinksItem & { code: string }) => void;
-}) {
-  const { translate } = useTranslationContext();
-  const [savingLinkChanges, setSavingLinkChanges] = useState<boolean>(false);
-
-  const item = linkToUpdate?.item as DriveFileData | undefined;
-
-  useEffect(() => {
-    if (isOpen) {
-      setSavingLinkChanges(false);
-    }
-  }, [isOpen]);
-
-  // Could be used for implementing an update of the Share Link if they have more features
-  // To be deleted:
-  async function updateShareLink(params: ShareTypes.UpdateShareLinkPayload) {
-    setSavingLinkChanges(true);
-    const updatedItem = await shareService.updateShareLink(params);
-    onShareUpdated(updatedItem as ShareTypes.ShareLink & { code: string });
-    setSavingLinkChanges(false);
-    //notificationsService.show({ text: translate('shared-links.toast.link-updated'), type: ToastType.Success });
-  }
-
-  function copyLink() {
-    const mnemonic = localStorageService.getUser()!.mnemonic;
-    const link = shareService.buildLinkFromShare(mnemonic, linkToUpdate);
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    copy(link);
-    notificationsService.show({ text: translate('shared-links.toast.copy-to-clipboard'), type: ToastType.Success });
-  }
-
-  return (
-    <Transition appear show={isOpen} as={Fragment}>
-      <Dialog as="div" className="relative z-50 select-none" open={isOpen} onClose={onClose}>
-        <Transition.Child
-          as={Fragment}
-          enter="ease-out duration-200"
-          enterFrom="opacity-0"
-          enterTo="opacity-100"
-          leave="ease-in duration-150"
-          leaveFrom="opacity-100"
-          leaveTo="opacity-0"
-        >
-          <div className="fixed inset-0 bg-gray-100 bg-opacity-50" />
-        </Transition.Child>
-
-        <div className="fixed inset-0 overflow-y-auto">
-          <div className="flex min-h-full items-center justify-center p-4 text-center">
-            <Transition.Child
-              as={Fragment}
-              enter="ease-out duration-200"
-              enterFrom="opacity-0 scale-95"
-              enterTo="opacity-100 scale-100"
-              leave="ease-in duration-150"
-              leaveFrom="opacity-100 scale-100"
-              leaveTo="opacity-0 scale-95"
-            >
-              <Dialog.Panel className="flex w-full max-w-lg transform flex-col space-y-5 overflow-hidden rounded-2xl bg-white p-5 text-left align-middle shadow-subtle-hard transition-all">
-                <Dialog.Title as="h3" className="flex flex-col text-2xl text-gray-80">
-                  <span className="font-medium">{translate('shared-links.link-settings.share-settings')}</span>
-                  <span className="truncate whitespace-nowrap text-base text-gray-40">
-                    {`${item?.name}${(item?.type && item?.type !== 'folder' && `.${item?.type}`) || ''}`}
-                  </span>
-                </Dialog.Title>
-
-                <div className="flex flex-col">
-                  <span className="text-lg font-semibold text-gray-80">
-                    {translate('shared-links.link-settings.views')}
-                  </span>
-                  <span className="text-gray-60">{`Link visited ${linkToUpdate?.views} times`}</span>
-                </div>
-
-                <div className="flex flex-row justify-between">
-                  <BaseButton
-                    onClick={copyLink}
-                    disabled={false}
-                    className="flex h-auto flex-row items-center space-x-2 rounded-lg border border-primary py-0 px-4 font-medium text-primary hover:bg-primary hover:bg-opacity-5 active:border-primary-dark"
-                  >
-                    <span>{translate('shared-links.link-settings.copy-link')}</span>
-                    <Link size={24} />
-                  </BaseButton>
-
-                  <div className="flex flex-row space-x-2">
-                    <BaseButton
-                      onClick={() => {
-                        // updateShareLink({
-                        //   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                        //   itemId: linkToUpdate!.id,
-                        //   // timesValid: -1,
-                        //   // active: true,
-                        // })
-                      }}
-                      isLoading={savingLinkChanges}
-                      className="flex h-auto flex-row items-center rounded-lg bg-primary py-0 px-4 font-medium text-white hover:bg-primary-dark"
-                    >
-                      {translate('shared-links.link-settings.close') as string}
-                    </BaseButton>
-                  </div>
-                </div>
-              </Dialog.Panel>
-            </Transition.Child>
-          </div>
-        </div>
-      </Dialog>
-    </Transition>
   );
 }

@@ -14,8 +14,7 @@ import { Environment } from '@internxt/inxt-js';
 import { ShareTypes } from '@internxt/sdk/dist/drive';
 import errorService from 'app/core/services/error.service';
 import { DriveItemData } from 'app/drive/types';
-import storageThunks from '../storage/storage.thunks';
-import { storageActions, storageSelectors } from '../storage';
+import { storageActions } from '../storage';
 import { t } from 'i18next';
 
 export interface ShareLinksState {
@@ -134,7 +133,7 @@ interface DeleteLinkPayload {
 
 export const deleteLinkThunk = createAsyncThunk<void, DeleteLinkPayload, { state: RootState }>(
   'shareds/deleteLink',
-  async (payload: DeleteLinkPayload, { dispatch, getState }) => {
+  async (payload: DeleteLinkPayload, { dispatch }) => {
     const { linkId, item } = payload;
     await shareService.deleteShareLink(linkId);
 

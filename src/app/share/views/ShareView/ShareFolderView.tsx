@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { WritableStream } from 'streamsaver';
 import { match } from 'react-router';
-import { getSharedFolderInfo, getSharedFolderSize } from 'app/share/services/share.service';
+import { getSharedFolderInfo } from 'app/share/services/share.service';
 import iconService from 'app/drive/services/icon.service';
 import sizeService from 'app/drive/services/size.service';
 import { TaskProgress } from 'app/tasks/types';
@@ -125,17 +125,13 @@ export default function ShareFolderView(props: ShareViewProps): JSX.Element {
       });
   }
 
-  const loadSize = (shareId: number, folderId: number): Promise<number> => {
-    return getSharedFolderSize(shareId.toString(), folderId.toString());
-  };
-
   const updateProgress = (progress: number) => {
     setProgress(Number((progress * 100).toFixed(2)));
   };
 
   const download = async (password?: string): Promise<void> => {
     if (!isDownloading) {
-      const folderInfo = info as unknown as ShareTypes.ShareLink | null;
+      const folderInfo = info as unknown as (ShareTypes.ShareLink & { fileToken: string | null }) | null;
 
       if (folderInfo) {
         setIsDownloading(true);
@@ -160,7 +156,7 @@ export default function ShareFolderView(props: ShareViewProps): JSX.Element {
             password,
           },
           folderInfo.bucket,
-          (folderInfo as any).fileToken,
+          folderInfo.fileToken,
           {
             filesLimit: FILES_LIMIT_BY_REQUEST,
             foldersLimit: FOLDERS_LIMIT_BY_REQUEST,

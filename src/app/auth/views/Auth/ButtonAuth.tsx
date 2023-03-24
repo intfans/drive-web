@@ -1,9 +1,9 @@
 import { useSignUp } from 'app/auth/components/SignUp/useSignUp';
 import { useAppDispatch } from 'app/store/hooks';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import signup from './signup';
 
-export default function ButtonAuth() {
+export default function ButtonAuth(): JSX.Element {
   const dispatch = useAppDispatch();
   const [loading, setLoading] = useState(false);
   const { doRegister } = useSignUp('activate');

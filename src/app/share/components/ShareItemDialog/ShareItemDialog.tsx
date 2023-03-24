@@ -136,8 +136,11 @@ const ShareItemDialog = ({ share, item, isPreviewView }: ShareItemDialogProps): 
                 const temporaryShare = share as ShareLink & { is_folder: boolean; encryptedCode?: string };
                 const itemType = share?.isFolder || temporaryShare.is_folder ? 'folder' : 'file';
                 const encryptedCode = share?.code || (temporaryShare?.encryptedCode as string);
-                const plainCode = aes.decrypt(encryptedCode, localStorageService.getUser()!.mnemonic);
-                copyShareLink(itemType, plainCode, share?.token as string, translate as TFunction);
+                const mnemonic = localStorageService.getUser()?.mnemonic;
+                if (mnemonic) {
+                  const plainCode = aes.decrypt(encryptedCode, mnemonic);
+                  copyShareLink(itemType, plainCode, share?.token as string, translate as TFunction);
+                }
               }}
             >
               {isLinkCopied ? (

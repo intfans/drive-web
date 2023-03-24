@@ -23,7 +23,6 @@ import testPasswordStrength from '@internxt/lib/dist/src/auth/testPasswordStreng
 import PasswordStrengthIndicator from 'app/shared/components/PasswordStrengthIndicator';
 import { useSignUp } from './useSignUp';
 import { validateFormat } from 'app/crypto/services/keys.service';
-import { decryptTextWithKey } from 'app/crypto/services/utils';
 import { UserSettings } from '@internxt/sdk/dist/shared/types/userSettings';
 import { useTranslationContext } from 'app/i18n/provider/TranslationProvider';
 import authService from 'app/auth/services/auth.service';

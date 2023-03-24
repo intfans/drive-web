@@ -1,7 +1,5 @@
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { useState, useEffect } from 'react';
 import { match } from 'react-router';
-import { aes } from '@internxt/lib';
 import shareService, { getSharedFileInfo } from 'app/share/services/share.service';
 import iconService from 'app/drive/services/icon.service';
 import sizeService from 'app/drive/services/size.service';
@@ -112,13 +110,6 @@ export default function ShareFileView(props: ShareViewProps): JSX.Element {
     }
   };
 
-  const getDecryptedName = (info: ShareTypes.ShareLink): string => {
-    const salt = `${process.env.REACT_APP_CRYPTO_SECRET2}-${info.item.id.toString()}`;
-    const decryptedFilename = aes.decrypt(info.item.name, salt);
-
-    return decryptedFilename;
-  };
-
   const getFormatFileName = (): string => {
     const hasType = info?.item?.type !== null;
     const extension = hasType ? `.${info?.item?.type}` : '';
@@ -150,7 +141,7 @@ export default function ShareFileView(props: ShareViewProps): JSX.Element {
   }
 
   function getBlob(abortController: AbortController): Promise<Blob> {
-    const fileInfo = info as unknown as ShareTypes.ShareLink;
+    const fileInfo = info as unknown as ShareTypes.ShareLink & { fileToken: string | undefined };
 
     const encryptionKey = fileInfo.encryptionKey;
 
@@ -158,7 +149,7 @@ export default function ShareFileView(props: ShareViewProps): JSX.Element {
       bucketId: fileInfo.bucket,
       fileId: fileInfo.item.fileId,
       encryptionKey: Buffer.from(encryptionKey, 'hex'),
-      token: (fileInfo as any).fileToken,
+      token: fileInfo.fileToken,
       options: {
         abortController,
         notifyProgress: () => null,
@@ -175,7 +166,7 @@ export default function ShareFileView(props: ShareViewProps): JSX.Element {
 
   const download = async (): Promise<void> => {
     if (!isDownloading) {
-      const fileInfo = info as unknown as ShareTypes.ShareLink;
+      const fileInfo = info as unknown as ShareTypes.ShareLink & { fileToken: string | undefined };
       const MIN_PROGRESS = 0;
 
       if (fileInfo) {
@@ -187,7 +178,7 @@ export default function ShareFileView(props: ShareViewProps): JSX.Element {
           bucketId: fileInfo.bucket,
           fileId: fileInfo.item.fileId,
           encryptionKey: Buffer.from(encryptionKey, 'hex'),
-          token: (fileInfo as any).fileToken,
+          token: fileInfo.fileToken,
           options: {
             notifyProgress: (totalProgress, downloadedBytes) => {
               const progress = Math.trunc((downloadedBytes / totalProgress) * 100);

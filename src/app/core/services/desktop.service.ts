@@ -11,7 +11,18 @@ interface LatestReleaseInfo {
   assets: AssetInfo[];
 }
 
-export async function getLatestReleaseInfo(user: string, repo: string) {
+export async function getLatestReleaseInfo(
+  user: string,
+  repo: string,
+): Promise<{
+  version: string;
+  links: {
+    windows: string | null;
+    linux: string | null;
+    macos: string | null;
+  };
+  cached: boolean;
+}> {
   const fetchUrl = `https://api.github.com/repos/${user}/${repo}/releases/latest`;
   const res = await fetch(fetchUrl);
 
@@ -26,21 +37,22 @@ export async function getLatestReleaseInfo(user: string, repo: string) {
   let macos;
 
   info.assets.forEach((asset) => {
-    const match: any = asset.browser_download_url.match(/\.(\w+)$/);
+    const match: RegExpMatchArray | null = asset.browser_download_url.match(/\.(\w+)$/);
 
-    switch (match[1]) {
-      case 'exe':
-        windows = asset.browser_download_url;
-        break;
-      case 'dmg':
-        macos = asset.browser_download_url;
-        break;
-      case 'deb':
-        linux = asset.browser_download_url;
-        break;
-      default:
-        break;
-    }
+    if (match)
+      switch (match[1]) {
+        case 'exe':
+          windows = asset.browser_download_url;
+          break;
+        case 'dmg':
+          macos = asset.browser_download_url;
+          break;
+        case 'deb':
+          linux = asset.browser_download_url;
+          break;
+        default:
+          break;
+      }
   });
 
   const url = {
