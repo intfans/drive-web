@@ -11,10 +11,10 @@ import EndToEnd from 'assets/images/shared-file/icons/end-to-end.png';
 import Lock from 'assets/images/shared-file/icons/lock.png';
 import EyeSlash from 'assets/images/shared-file/icons/eye-slash.png';
 import '../../../share/views/ShareView/ShareView.scss';
-import { ReactComponent as InternxtLogo } from 'assets/icons/big-logo.svg';
 import notificationsService, { ToastType } from 'app/notifications/services/notifications.service';
 import { useTranslationContext } from 'app/i18n/provider/TranslationProvider';
-
+import Button from 'app/shared/components/Button/Button';
+import { DotsThree, Link as LinkIcon, SignIn, UserPlus } from 'phosphor-react';
 interface ShareLayoutProps {
   children: JSX.Element;
 }
@@ -51,6 +51,11 @@ export default function ShareLayout(props: ShareLayoutProps): JSX.Element {
 
   const logout = () => {
     dispatch(userThunks.logoutThunk());
+  };
+
+  const copyNavigatorLink = () => {
+    navigator.clipboard.writeText(window.location.href);
+    notificationsService.show({ text: translate('success.linkCopied'), type: ToastType.Success });
   };
 
   return (
@@ -109,7 +114,7 @@ export default function ShareLayout(props: ShareLayoutProps): JSX.Element {
         {/* Download container */}
         <div className="flex flex-1 flex-col">
           {/* Top bar */}
-          <div className="hidden h-20 flex-shrink-0 flex-row items-center justify-end px-6 sm:flex">
+          <div className="flex h-20 flex-shrink-0 flex-row items-center justify-end px-6">
             {isAuthenticated ? (
               <>
                 {/* User avatar */}
@@ -195,42 +200,103 @@ export default function ShareLayout(props: ShareLayoutProps): JSX.Element {
               <>
                 {/* Login / Create account */}
                 <div className="flex flex-row space-x-3">
-                  <div
-                    className="flex h-9 cursor-pointer flex-row items-center justify-center rounded-lg px-4
-                                    font-medium text-cool-gray-90 no-underline hover:text-cool-gray-90"
+                  <button
+                    onClick={copyNavigatorLink}
+                    title={translate('actions.copyLink')}
+                    className="outline-none flex hidden cursor-pointer flex-row items-center justify-center rounded-lg bg-white bg-opacity-0 font-medium transition duration-50 ease-in-out hover:bg-opacity-10 focus:bg-opacity-5 focus-visible:bg-opacity-5 sm:block"
+                  >
+                    <LinkIcon size={20} />
+                  </button>
+                  <Button
+                    variant="secondary"
+                    type="button"
                     onClick={() => {
                       window.location.href = process.env.REACT_APP_HOSTNAME + '/login';
                     }}
+                    className="hidden px-5 sm:block"
                   >
-                    {translate('shareLayout.topBar.login')}
-                  </div>
-
-                  <div
-                    className="flex h-9 cursor-pointer flex-row items-center justify-center rounded-lg bg-cool-gray-10
-                                    px-4 font-medium text-cool-gray-90 no-underline
-                                    hover:text-cool-gray-90"
+                    {translate('auth.login.title')}
+                  </Button>
+                  <Button
+                    variant="primary"
+                    type="button"
                     onClick={() => {
-                      window.location.href = process.env.REACT_APP_HOSTNAME + '/new';
+                      window.open(`${process.env.REACT_APP_HOSTNAME}/new`, '_blank');
                     }}
+                    className="hidden px-5 sm:block"
                   >
-                    {translate('shareLayout.topBar.createAccount')}
-                  </div>
+                    {translate('auth.login.createAccount')}
+                  </Button>
+                  <Menu as="div" className="relative inline-block text-left sm:hidden">
+                    <Menu.Button className="outline-none flex h-11 w-11 cursor-pointer flex-row items-center justify-center rounded-lg bg-white bg-opacity-0 font-medium transition duration-50 ease-in-out hover:bg-opacity-10 focus:bg-opacity-5 focus-visible:bg-opacity-5">
+                      <DotsThree weight="bold" size={20} />
+                    </Menu.Button>
+                    <Transition
+                      className={'flex'}
+                      enter="transform transition duration-100 ease-out"
+                      enterFrom="opacity-0"
+                      enterTo="opacity-100"
+                      leave="transform transition duration-100 ease-out"
+                      leaveFrom="scale-95 opacity-100"
+                      leaveTo="scale-100 opacity-0"
+                    >
+                      <Menu.Items
+                        className={
+                          'outline-none absolute right-0 mt-1 w-56 origin-top-right rounded-md border border-black border-opacity-8 bg-white py-1.5 text-base shadow-subtle-hard'
+                        }
+                      >
+                        <>
+                          <Menu.Item>
+                            {({ active }) => (
+                              <div
+                                onClick={copyNavigatorLink}
+                                className={`${
+                                  active && 'bg-gray-5'
+                                } flex cursor-pointer items-center py-2 px-3 text-gray-80 hover:bg-gray-5`}
+                              >
+                                <LinkIcon size={20} />
+                                <p className="ml-3">{translate('drive.dropdown.getLink')}</p>
+                              </div>
+                            )}
+                          </Menu.Item>
+                          <div className="my-0.5 mx-3 border-t border-gray-10" />
+                          <Menu.Item>
+                            {({ active }) => (
+                              <div
+                                onClick={() => {
+                                  window.location.href = process.env.REACT_APP_HOSTNAME + '/login';
+                                }}
+                                className={`${
+                                  active && 'bg-gray-5'
+                                } flex cursor-pointer items-center py-2 px-3 text-gray-80 hover:bg-gray-5`}
+                              >
+                                <SignIn size={20} />
+                                <p className="ml-3">{translate('auth.login.title')}</p>
+                              </div>
+                            )}
+                          </Menu.Item>
+                          <Menu.Item>
+                            {({ active }) => (
+                              <div
+                                onClick={() => {
+                                  window.open(`${process.env.REACT_APP_HOSTNAME}/new`, '_blank');
+                                }}
+                                className={`${
+                                  active && 'bg-gray-5'
+                                } flex cursor-pointer items-center py-2 px-3 text-gray-80 hover:bg-gray-5`}
+                              >
+                                <UserPlus size={20} />
+                                <p className="ml-3">{translate('auth.login.createAccount')}</p>
+                              </div>
+                            )}
+                          </Menu.Item>
+                        </>
+                      </Menu.Items>
+                    </Transition>
+                  </Menu>
                 </div>
               </>
             )}
-          </div>
-
-          <div className="flex flex-row items-center justify-between p-4 sm:hidden">
-            <InternxtLogo className="h-3 w-auto" />
-            <Link to="/new" className="no-underline">
-              <div
-                className="flex h-9 cursor-pointer flex-row items-center justify-end rounded-full border border-primary
-                                    px-4 font-medium text-primary no-underline
-                                    hover:text-primary-dark"
-              >
-                {translate('shareLayout.topBar.getStarted')}
-              </div>
-            </Link>
           </div>
 
           {/* File container */}

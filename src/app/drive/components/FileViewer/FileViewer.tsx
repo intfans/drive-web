@@ -35,6 +35,9 @@ import ShareItemDialog from 'app/share/components/ShareItemDialog/ShareItemDialo
 import { RootState } from 'app/store';
 import { uiActions } from 'app/store/slices/ui';
 import { setItemsToMove, storageActions } from '../../../store/slices/storage';
+import { X } from 'phosphor-react';
+import Button from 'app/shared/components/Button/Button';
+import { ReactComponent as InternxtLogo } from 'assets/icons/big-logo.svg';
 
 interface FileViewerProps {
   file?: DriveFileData;
@@ -51,6 +54,7 @@ interface FileViewerProps {
 export interface FormatFileViewerProps {
   blob: Blob;
   changeFile: (direction: string) => void;
+  isSignUpBannerOpen: boolean;
 }
 
 const extensionsList = fileExtensionService.computeExtensionsLists(fileExtensionPreviewableGroups);
@@ -93,6 +97,7 @@ const FileViewer = ({
   const isCreateFolderDialogOpen = useAppSelector((state: RootState) => state.ui.isCreateFolderDialogOpen);
   const isEditNameDialogOpen = useAppSelector((state: RootState) => state.ui.isEditFolderNameDialog);
   const isShareItemSettingsDialogOpen = useAppSelector((state) => state.ui.isShareItemDialogOpenInPreviewView);
+  const [isSignUpBannerOpen, setIsSignUpBannerOpen] = useState(false);
 
   // Get all files in the current folder, sort the files and find the current file to display the file
   const currentItemsFolder = useAppSelector((state) => state.storage.levels[file?.folderId || '']);
@@ -157,6 +162,10 @@ const FileViewer = ({
     }
     dispatch(uiActions.setCurrentEditingNameDirty(''));
   }, [dirtyName, file]);
+
+  useEffect(() => {
+    !isAuthenticated && setIsSignUpBannerOpen(true);
+  }, []);
 
   let isTypeAllowed = false;
   let fileExtensionGroup: number | null = null;
@@ -331,6 +340,10 @@ const FileViewer = ({
     }
   }, [show, file]);
 
+  const onCloseSignUpBanner = () => {
+    setIsSignUpBannerOpen(false);
+  };
+
   return (
     <Transition
       show={show}
@@ -345,10 +358,39 @@ const FileViewer = ({
     >
       <Dialog
         as="div"
-        className="hide-scroll fixed inset-0 z-50 flex flex-col items-center justify-start text-white"
+        className="hide-scroll fixed inset-0 z-40 flex flex-col items-center justify-start text-white"
         onClose={onClose}
       >
         <div className="flex h-screen w-screen flex-col items-center justify-center">
+          {!isAuthenticated && isShareView && isSignUpBannerOpen && (
+            <div className="absolute left-1/2 bottom-4 z-50 flex -translate-x-1/2 transform flex-col flex-wrap items-center rounded-lg bg-white py-4 px-8 text-gray-100 shadow-subtle-hard xl:flex-row xl:flex-nowrap">
+              <InternxtLogo className="h-auto w-28" />
+              <div className="my-6 flex flex-col items-center lg:flex-row xl:my-0 xl:mx-10">
+                <p className="whitespace-normal text-center text-lg font-semibold md:whitespace-nowrap">
+                  {translate('shareLayout.createAccountBanner.title')}&nbsp;
+                </p>
+                <p className="whitespace-normal text-center text-lg md:whitespace-nowrap">
+                  {translate('shareLayout.createAccountBanner.description')}
+                </p>
+              </div>
+              <div className="flex">
+                <Button variant="secondary" type="button" onClick={onCloseSignUpBanner} className="mr-2 px-5 xl:hidden">
+                  {translate('shareLayout.createAccountBanner.close')}
+                </Button>
+                <Button
+                  variant="primary"
+                  type="button"
+                  onClick={() => {
+                    window.open(`${process.env.REACT_APP_HOSTNAME}/new`, '_blank');
+                  }}
+                  className="px-5"
+                >
+                  {translate('auth.login.createAccount')}
+                </Button>
+              </div>
+              <X size={20} className="ml-5 hidden cursor-pointer text-gray-50 xl:block" onClick={onCloseSignUpBanner} />
+            </div>
+          )}
           {/* Close overlay */}
           <Dialog.Overlay
             className="fixed inset-0 bg-black bg-opacity-85 backdrop-blur-md
@@ -376,7 +418,7 @@ const FileViewer = ({
                 <div onClick={(e) => e.stopPropagation()} className="">
                   {blob ? (
                     <Suspense fallback={<div></div>}>
-                      <Viewer blob={blob} changeFile={changeFile} />
+                      <Viewer blob={blob} changeFile={changeFile} isSignUpBannerOpen={isSignUpBannerOpen} />
                     </Suspense>
                   ) : (
                     <>
@@ -441,14 +483,16 @@ const FileViewer = ({
           >
             {/* Close and title */}
             <div className="mt-3 mr-6 flex h-10 flex-row items-center justify-start space-x-4 truncate md:mr-32">
-              <button
-                onClick={onClose}
-                className="group relative flex h-10 w-10 flex-shrink-0 flex-col items-center justify-center rounded-full
+              {!isShareView && (
+                <button
+                  onClick={onClose}
+                  className="group relative flex h-10 w-10 flex-shrink-0 flex-col items-center justify-center rounded-full
                                 bg-white bg-opacity-0 transition duration-50 ease-in-out
                                 hover:bg-opacity-10 focus:bg-opacity-5"
-              >
-                <UilMultiply height={24} width={24} />
-              </button>
+                >
+                  <UilMultiply height={24} width={24} />
+                </button>
+              )}
 
               <Dialog.Title className="flex w-11/12 flex-row items-center text-lg">
                 <ItemIconComponent className="mr-3" width={32} height={32} />

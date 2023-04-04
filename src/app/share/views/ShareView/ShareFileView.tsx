@@ -65,8 +65,26 @@ export default function ShareFileView(props: ShareViewProps): JSX.Element {
   const [requiresPassword, setRequiresPassword] = useState(false);
   const [itemPassword, setItemPassword] = useState('');
   const [sendBannerVisible, setIsSendBannerVisible] = useState(false);
+  const [isTypeAllowed, setIsTypeAllowed] = useState(true);
 
   let body;
+
+  useEffect(() => {
+    const extensionsList = fileExtensionService.computeExtensionsLists(fileExtensionPreviewableGroups);
+    const extensionsWithFileViewer = Object.entries(extensionsList)
+      .map((arr) => arr[1])
+      .filter((arr) => arr.length > 0);
+    for (const extensions of extensionsWithFileViewer) {
+      if (extensions.includes(info?.item?.type || '')) {
+        setIsTypeAllowed(false);
+      }
+      if (requiresPassword) {
+        setOpenPreview(false);
+      } else {
+        setOpenPreview(true);
+      }
+    }
+  }, [requiresPassword]);
 
   useEffect(() => {
     loadInfo().catch((err) => {
@@ -98,18 +116,6 @@ export default function ShareFileView(props: ShareViewProps): JSX.Element {
 
   const closePreview = () => {
     setOpenPreview(false);
-  };
-
-  const isTypeAllowed = () => {
-    const extensionsList = fileExtensionService.computeExtensionsLists(fileExtensionPreviewableGroups);
-    const extensionsWithFileViewer = Object.entries(extensionsList)
-      .map((arr) => arr[1])
-      .filter((arr) => arr.length > 0);
-    for (const extensions of extensionsWithFileViewer) {
-      if (extensions.includes(info?.item?.type || '')) {
-        return true;
-      }
-    }
   };
 
   const getDecryptedName = (info: ShareTypes.ShareLink): string => {
@@ -277,7 +283,7 @@ export default function ShareFileView(props: ShareViewProps): JSX.Element {
 
         {/* Actions */}
         <div className="flex flex-row items-center justify-center space-x-3">
-          {isTypeAllowed() && (
+          {isTypeAllowed && (
             <button
               onClick={() => {
                 setOpenPreview(true);

@@ -10,6 +10,8 @@ import {
   LinkBreak,
   PencilSimple,
   Trash,
+  SignIn,
+  UserPlus,
 } from 'phosphor-react';
 import moveItemsToTrash from 'use_cases/trash/move-items-to-trash';
 import { sharedThunks } from 'app/store/slices/sharedLinks';
@@ -91,7 +93,7 @@ const TopBarActions: FC<TopBarActionsProps> = ({
           <button
             onClick={copyNavigatorLink}
             title={translate('actions.copyLink')}
-            className="outline-none flex h-11 w-11 cursor-pointer flex-row items-center justify-center rounded-lg bg-white bg-opacity-0 font-medium transition duration-50 ease-in-out hover:bg-opacity-10 focus:bg-opacity-5 focus-visible:bg-opacity-5"
+            className="outline-none flex hidden h-11 w-11 cursor-pointer flex-row items-center justify-center rounded-lg bg-white bg-opacity-0 font-medium transition duration-50 ease-in-out hover:bg-opacity-10 focus:bg-opacity-5 focus-visible:bg-opacity-5 sm:block"
           >
             <Link size={20} />
           </button>
@@ -241,16 +243,95 @@ const TopBarActions: FC<TopBarActionsProps> = ({
         </Menu>
       )}
       {!isAuthenticated && (
-        <Button
-          variant="secondary"
-          type="button"
-          onClick={() => {
-            window.location.href = process.env.REACT_APP_HOSTNAME + '/login';
-          }}
-          className="px-5"
-        >
-          {t('auth.login.title')}
-        </Button>
+        <>
+          <Button
+            variant="secondary"
+            type="button"
+            onClick={() => {
+              window.location.href = process.env.REACT_APP_HOSTNAME + '/login';
+            }}
+            className="hidden px-5 sm:block"
+          >
+            {t('auth.login.title')}
+          </Button>
+          <Button
+            variant="primary"
+            type="button"
+            onClick={() => {
+              window.open(`${process.env.REACT_APP_HOSTNAME}/new`, '_blank');
+            }}
+            className="hidden px-5 sm:block"
+          >
+            {t('auth.login.createAccount')}
+          </Button>
+          <Menu as="div" className="relative inline-block text-left sm:hidden">
+            <Menu.Button className="outline-none flex h-11 w-11 cursor-pointer flex-row items-center justify-center rounded-lg bg-white bg-opacity-0 font-medium transition duration-50 ease-in-out hover:bg-opacity-10 focus:bg-opacity-5 focus-visible:bg-opacity-5">
+              <DotsThree weight="bold" size={20} />
+            </Menu.Button>
+            <Transition
+              className={'flex'}
+              enter="transform transition duration-100 ease-out"
+              enterFrom="opacity-0"
+              enterTo="opacity-100"
+              leave="transform transition duration-100 ease-out"
+              leaveFrom="scale-95 opacity-100"
+              leaveTo="scale-100 opacity-0"
+            >
+              <Menu.Items
+                className={
+                  'outline-none absolute right-0 mt-1 w-56 origin-top-right rounded-md border border-black border-opacity-8 bg-white py-1.5 text-base shadow-subtle-hard'
+                }
+              >
+                <>
+                  <Menu.Item>
+                    {({ active }) => (
+                      <div
+                        onClick={copyNavigatorLink}
+                        className={`${
+                          active && 'bg-gray-5'
+                        } flex cursor-pointer items-center py-2 px-3 text-gray-80 hover:bg-gray-5`}
+                      >
+                        <Link size={20} />
+                        <p className="ml-3">{translate('drive.dropdown.getLink')}</p>
+                      </div>
+                    )}
+                  </Menu.Item>
+                  <div className="my-0.5 mx-3 border-t border-gray-10" />
+                  <Menu.Item>
+                    {({ active }) => (
+                      <div
+                        onClick={() => {
+                          window.location.href = process.env.REACT_APP_HOSTNAME + '/login';
+                        }}
+                        className={`${
+                          active && 'bg-gray-5'
+                        } flex cursor-pointer items-center py-2 px-3 text-gray-80 hover:bg-gray-5`}
+                      >
+                        <SignIn size={20} />
+                        <p className="ml-3">{translate('auth.login.title')}</p>
+                      </div>
+                    )}
+                  </Menu.Item>
+                  <Menu.Item>
+                    {({ active }) => (
+                      <div
+                        onClick={() => {
+                          window.open(`${process.env.REACT_APP_HOSTNAME}/new`, '_blank');
+                        }}
+                        className={`${
+                          active && 'bg-gray-5'
+                        } flex cursor-pointer items-center py-2 px-3 text-gray-80 hover:bg-gray-5`}
+                      >
+                        <UserPlus size={20} />
+                        <p className="ml-3">{translate('auth.login.createAccount')}</p>
+                      </div>
+                    )}
+                  </Menu.Item>
+                </>
+              </Menu.Items>
+            </Transition>
+          </Menu>
+        </>
       )}
     </div>
   );

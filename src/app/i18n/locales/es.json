@@ -96,6 +96,11 @@
       "login": "Iniciar sesión",
       "createAccount": "Crear una cuenta",
       "getStarted": "Empezar"
+    },
+    "createAccountBanner": {
+      "title": "Bienvenido a internxt Drive!",
+      "description": "Mantén tus archivos a salvo, empezando con hasta 10 GB GRATIS.",
+      "close": "Cerrar"
     }
   },
   "shareItemPwdView": {
