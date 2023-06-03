@@ -199,11 +199,11 @@ const DriveExplorer = (props: DriveExplorerProps): JSX.Element => {
   useEffect(() => {
     const splitUrl = currentUrl.split('/');
     const pathUrl = splitUrl.slice(-2);
-    const isANumber = /^\d+$/;
-    if (isANumber.test(pathUrl[1])) {
-      const folderName = pathUrl[0];
-      const folderId = Number(pathUrl[1]);
-      dispatch(storageThunks.goToFolderThunk({ name: folderName, id: folderId }));
+    const itemType = pathUrl[0];
+    const itemId = pathUrl[1];
+
+    if (itemType === 'file' || itemType === 'folder') {
+      dispatch(storageThunks.goToUrlThunk({ id: itemId, type: itemType }));
     }
   }, [currentUrl]);
 

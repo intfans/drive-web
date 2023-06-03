@@ -132,6 +132,10 @@ export interface FolderPath {
   name: string;
   id: number;
 }
+export interface UrlPath {
+  id: number | string;
+  type: string;
+}
 
 export interface FolderPathDialog {
   name: string;

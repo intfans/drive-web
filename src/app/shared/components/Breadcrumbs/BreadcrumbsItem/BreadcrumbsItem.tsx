@@ -140,7 +140,7 @@ const BreadcrumbsItem = (props: BreadcrumbsItemProps): JSX.Element => {
   );
   const onItemClicked = (item: BreadcrumbItemData): void => {
     dispatch(uiActions.setCurrentEditingBreadcrumbNameDirty(''));
-    window.history.pushState(null, '', `/app/${item.label}/${item.id}`);
+    window.history.pushState(null, '', `/drive/folder/${item.id}`);
     if (item.active) {
       item.onClick && item.onClick();
     }
