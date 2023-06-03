@@ -62,12 +62,12 @@ const Sidenav = (props: SidenavProps) => {
       </div>
       <div className="flex flex-grow flex-col overflow-x-auto border-r border-gray-5 px-2">
         <div className="mt-2">
-          <SidenavItem label={translate('sideNav.drive')} to="/app" Icon={FolderSimple} />
-          <SidenavItem label={translate('sideNav.photos')} to="/app/photos" Icon={ImageSquare} />
-          <SidenavItem label={translate('sideNav.backups')} to="/app/backups" Icon={ClockCounterClockwise} />
-          <SidenavItem label={translate('sideNav.sharedLinks')} to="/app/shared-links" Icon={Link} />
-          <SidenavItem label={translate('sideNav.recents')} to="/app/recents" Icon={Clock} />
-          <SidenavItem label={translate('sideNav.trash')} to="/app/trash" Icon={Trash} />
+          <SidenavItem label={translate('sideNav.drive')} to="/drive" Icon={FolderSimple} />
+          <SidenavItem label={translate('sideNav.photos')} to="/photos" Icon={ImageSquare} />
+          <SidenavItem label={translate('sideNav.backups')} to="/backups" Icon={ClockCounterClockwise} />
+          <SidenavItem label={translate('sideNav.sharedLinks')} to="/shared-links" Icon={Link} />
+          <SidenavItem label={translate('sideNav.recents')} to="/recents" Icon={Clock} />
+          <SidenavItem label={translate('sideNav.trash')} to="/trash" Icon={Trash} />
           <SidenavItem label={translate('sideNav.desktop')} Icon={Desktop} onClick={onDownloadAppButtonClicked} />
         </div>
         {props.subscription && props.subscription.type === 'free' ? (

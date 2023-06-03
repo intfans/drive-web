@@ -60,35 +60,35 @@
     {
       "id": "drive",
       "layout": "header-and-sidenav",
-      "path": "/app",
+      "path": "/drive",
       "exact": true,
       "auth": true
     },
     {
       "id": "recents",
       "layout": "header-and-sidenav",
-      "path": "/app/recents",
+      "path": "/recents",
       "exact": true,
       "auth": true
     },
     {
       "id": "backups",
       "layout": "header-and-sidenav",
-      "path": "/app/backups",
+      "path": "/backups",
       "exact": true,
       "auth": true
     },
     {
       "id": "shared-links",
       "layout": "header-and-sidenav",
-      "path": "/app/shared-links",
+      "path": "/shared-links",
       "exact": true,
       "auth": true
     },
     {
       "id": "photos",
       "layout": "header-and-sidenav",
-      "path": "/app/photos",
+      "path": "/photos",
       "exact": true,
       "auth": true,
       "hideSearch": true
@@ -97,15 +97,22 @@
     {
       "id": "trash",
       "layout": "header-and-sidenav",
-      "path": "/app/trash",
+      "path": "/trash",
       "exact": true,
       "auth": true,
       "hideSearch": true
     },
     {
-      "id": "drive-item",
+      "id": "drive-folder",
       "layout": "header-and-sidenav",
-      "path": "/app/:name/:id",
+      "path": "/drive/folder/:id",
+      "exact": false,
+      "auth": true
+    },
+    {
+      "id": "drive-file",
+      "layout": "header-and-sidenav",
+      "path": "/drive/file/:id",
       "exact": false,
       "auth": true
     },
