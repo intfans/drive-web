@@ -33,7 +33,8 @@
     "es": "Español (Espagnol)",
     "fr": "Français (Français)",
     "it": "Italiano (Italien)",
-    "cn": "简体中文 (Chinois)"
+    "cn": "简体中文 (Chinois)",
+    "ru": "Русский (Russe)"
   },
   "auth": {
     "email": "Adresse électronique",
@@ -52,7 +53,8 @@
     "signup": {
       "title": "Créer un compte",
       "haveAccount": "Vous avez déjà un compte ?",
-      "login": "Connexion"
+      "login": "Connexion",
+      "encrypting": "Cryptage"
     },
     "forgotPassword": {
       "title": "Mot de passe oublié",
@@ -563,7 +565,9 @@
     "emptyPassword": "Previous password must not be empty",
     "errorMovingToTrash": "Error lors du déplacement des éléments.",
     "braveNotSupportMultiplePhotosDowload": "Brave doesn't support multiple photo downloads.",
-    "maxSizeUploadLimitError": "File too large (greater than 10GB)"
+    "maxSizeUploadLimitError": "File too large (greater than 10GB)",
+    "connectionLostError": "Connexion Internet perdue",
+    "errorLoadingTrashItems": "Erreur de chargement des éléments de la corbeille"
   },
   "backups": {
     "backups-from": "Sauvagardes de {{deviceName}}",
@@ -721,6 +725,7 @@
         "pending": "En attente de téléchargement",
         "decrypting": "Décryptage des fichiers",
         "in-process": "{{progress}}% Téléchargement du dossier",
+        "in-process-without-progress": "Téléchargement du dossier",
         "success": "Dossier téléchargé",
         "error": "Le téléchargement a échoué, cliquez sur ↻ pour réessayer",
         "cancelled": "Téléchargement annulé"

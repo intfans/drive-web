@@ -50,7 +50,8 @@
     "es": "Español (Spanish)",
     "fr": "Français (French)",
     "it": "Italiano (Italian)",
-    "cn": "简体中文 (Chinese)"
+    "cn": "简体中文 (Chinese)",
+    "ru": "Русский (Russian)"
   },
   "auth": {
     "email": "Email",
@@ -68,8 +69,9 @@
     },
     "signup": {
       "title": "Create account",
-      "haveAccount": "already have an account?",
-      "login": "Log in"
+      "haveAccount": "Already have an account?",
+      "login": "Log in",
+      "encrypting": "Encrypting"
     },
     "forgotPassword": {
       "title": "Forgot password",
@@ -628,7 +630,9 @@
     "errorMovingToTrash": "An error occurred while moving the items to trash.",
     "errorDeletingFromTrash": "An error occurred while deleting the items from trash.",
     "braveNotSupportMultiplePhotosDowload": "Brave doesn't support multiple photo downloads.",
-    "maxSizeUploadLimitError": "File too large (greater than 10GB)"
+    "maxSizeUploadLimitError": "File too large (greater than 10GB)",
+    "connectionLostError": "Internet connection lost",
+    "errorLoadingTrashItems": "Error loading trash items"
   },
   "backups": {
     "backups-from": "Backups from {{deviceName}}",
@@ -785,6 +789,7 @@
         "pending": "Pending to download",
         "decrypting": "Decrypting files",
         "in-process": "{{progress}}% Downloading folder",
+        "in-process-without-progress": "Downloading folder",
         "success": "Folder downloaded",
         "error": "Download failed, click ↻ to retry",
         "cancelled": "Download cancelled"
@@ -881,7 +886,7 @@
     "errorCancelSubscription": "Something went wrong while cancelling your subscription",
     "successApplyCoupon": "3 months free of charge applied",
     "errorApplyCoupon": "An error occurred while applying the discount",
-    "alreadyAppliedCouponn": "The coupon has been already applied"
+    "alreadyAppliedCoupon": "The coupon has been already applied"
   },
   "actions": {
     "undo": "Undo",

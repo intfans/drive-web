@@ -33,7 +33,8 @@
     "es": "Español (Español)",
     "fr": "Français (Francés)",
     "it": "Italiano (Italiano)",
-    "cn": "简体中文 (Chino)"
+    "cn": "简体中文 (Chino)",
+    "ru": "Русский (Ruso)"
   },
   "auth": {
     "email": "Correo electrónico",
@@ -52,7 +53,8 @@
     "signup": {
       "title": "Crear una cuenta",
       "haveAccount": "¿Ya tienes una cuenta?",
-      "login": "Iniciar sesión"
+      "login": "Iniciar sesión",
+      "encrypting": "Encriptando"
     },
     "forgotPassword": {
       "title": "Contraseña olvidada",
@@ -610,7 +612,9 @@
     "errorMovingToTrash": "Ha ocurrido un error mientras se movian los items a la basura.",
     "errorDeletingFromTrash": "Ha ocurrido un error mientras se eliminaban los items de la basura.",
     "braveNotSupportMultiplePhotosDowload": "Brave no admite la descarga multiple de fotos.",
-    "maxSizeUploadLimitError": "File too large (greater than 10GB)"
+    "maxSizeUploadLimitError": "File too large (greater than 10GB)",
+    "connectionLostError": "Conexión a internet perdida",
+    "errorLoadingTrashItems": "Error al cargar items de la papelera"
   },
   "backups": {
     "backups-from": "Copias de seguridad de {{deviceName}}",
@@ -768,6 +772,7 @@
         "pending": "Descarga pendiente",
         "decrypting": "Decrypting files",
         "in-process": "{{progress}}% carpeta descargada",
+        "in-process-without-progress": "Descargando carpeta",
         "success": "Carpeta descargada",
         "error": "La descarga ha fallado, haga clic en ↻ para volver a intentarlo",
         "cancelled": "Descarga cancelada"
@@ -848,7 +853,7 @@
     "errorCancelSubscription": "Algo ha ido mal al cancelar la suscripción",
     "successApplyCoupon": "Se han aplicado 3 meses gratis",
     "errorApplyCoupon": "Se ha producido un error al aplicar el descuento",
-    "alreadyAppliedCouponn": "El cupón ya se ha aplicado"
+    "alreadyAppliedCoupon": "El cupón ya se ha aplicado"
   },
   "success": {
     "passwordChanged": "Contraseña actualizada correctamente",

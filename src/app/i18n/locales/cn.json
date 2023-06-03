@@ -50,7 +50,8 @@
     "es": "Español (西班牙语)",
     "fr": "Français (法语)",
     "it": "Italiano (意大利语)",
-    "cn": "简体中文 (简体中文)"
+    "cn": "简体中文 (简体中文)",
+    "ru": "Русский (俄语)"
   },
   "auth": {
     "email": "电子邮件",
@@ -69,7 +70,8 @@
     "signup": {
       "title": "Create account",
       "haveAccount": "already have an account?",
-      "login": "Log in"
+      "login": "Log in",
+      "encrypting": "正在加密文件"
     },
     "forgotPassword": {
       "title": "Forgot password",
@@ -622,7 +624,9 @@
     "errorMovingToTrash": "An error occurred while moving the items to trash.",
     "errorDeletingFromTrash": "An error occurred while deleting the items from trash.",
     "braveNotSupportMultiplePhotosDowload": "Brave doesn't support multiple photo downloads.",
-    "maxSizeUploadLimitError": "File too large (greater than 10GB)"
+    "maxSizeUploadLimitError": "File too large (greater than 10GB)",
+    "connectionLostError": "互联网连接丢失",
+    "errorLoadingTrashItems": "Error loading trash items"
   },
   "backups": {
     "backups-from": "来自 {{deviceName}} 的备份",
@@ -779,6 +783,7 @@
         "pending": "等待下载",
         "decrypting": "正在解密文件",
         "in-process": "{{progress}}% 正在下载文件夹",
+        "in-process-without-progress": "正在下载文件夹",
         "success": "文件夹已下载",
         "error": "下载失败, 请点击 ↻  重试",
         "cancelled": "下载已取消"

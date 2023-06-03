@@ -74,6 +74,8 @@ import { useTaskManagerGetNotifications } from '../../../tasks/hooks';
 import { TaskStatus } from '../../../tasks/types';
 import SkinSkeletonItem from '../../../shared/components/List/SkinSketelonItem';
 import errorService from '../../../core/services/error.service';
+import { fetchPaginatedFolderContentThunk } from '../../../store/slices/storage/storage.thunks/fetchFolderContentThunk';
+import BannerWrapper from 'app/banners/BannerWrapper';
 
 const PAGINATION_LIMIT = 50;
 const TRASH_PAGINATION_OFFSET = 50;
@@ -131,6 +133,8 @@ const DriveExplorer = (props: DriveExplorerProps): JSX.Element => {
     onItemsMoved,
     folderOnTrashLength,
     filesOnTrashLength,
+    hasMoreFolders,
+    hasMoreFiles,
   } = props;
   const dispatch = useAppDispatch();
   const { translate } = useTranslationContext();
@@ -225,10 +229,21 @@ const DriveExplorer = (props: DriveExplorerProps): JSX.Element => {
   }, []);
 
   useEffect(() => {
-    if (isTrash && !hasMoreTrashFolders) {
-      getMoreTrashItems().catch((error) => errorService.reportError(error));
+    if ((!isTrash && !hasMoreFolders) || (isTrash && !hasMoreTrashFolders)) {
+      fetchItems();
     }
-  }, [hasMoreTrashFolders]);
+  }, [hasMoreFolders, hasMoreTrashFolders]);
+
+  useEffect(() => {
+    if (!isTrash && !hasMoreFiles) {
+      setHasMoreItems(false);
+    }
+  }, [hasMoreFiles]);
+
+  useEffect(() => {
+    resetPaginationState();
+    fetchItems();
+  }, [currentFolderId]);
 
   useEffect(() => {
     if (
@@ -249,6 +264,9 @@ const DriveExplorer = (props: DriveExplorerProps): JSX.Element => {
     setHasMoreTrashFolders(true);
     setIsLoadingTrashItems(false);
   };
+
+  const fetchItems = () =>
+    isTrash ? getMoreTrashItems() : dispatch(fetchPaginatedFolderContentThunk(currentFolderId));
 
   const passToNextStep = () => {
     setCurrentTutorialStep(currentTutorialStep + 1);
@@ -276,10 +294,26 @@ const DriveExplorer = (props: DriveExplorerProps): JSX.Element => {
   const getMoreTrashItems = hasMoreTrashFolders ? getMoreTrashFolders : getMoreTrashFiles;
 
   const onUploadFileButtonClicked = (): void => {
+    errorService.addBreadcrumb({
+      level: 'info',
+      category: 'button',
+      message: 'File upload button clicked',
+      data: {
+        currentFolderId: currentFolderId,
+      },
+    });
     fileInputRef.current?.click();
   };
 
   const onUploadFolderButtonClicked = (): void => {
+    errorService.addBreadcrumb({
+      level: 'info',
+      category: 'button',
+      message: 'Folder upload button clicked',
+      data: {
+        currentFolderId: currentFolderId,
+      },
+    });
     folderInputRef.current?.click();
   };
 
@@ -325,10 +359,26 @@ const DriveExplorer = (props: DriveExplorerProps): JSX.Element => {
   };
 
   const onCreateFolderButtonClicked = (): void => {
+    errorService.addBreadcrumb({
+      level: 'info',
+      category: 'button',
+      message: 'Create folder button clicked',
+      data: {
+        currentFolderId: currentFolderId,
+      },
+    });
     dispatch(uiActions.setIsCreateFolderDialogOpen(true));
   };
 
   const onBulkDeleteButtonClicked = (): void => {
+    errorService.addBreadcrumb({
+      level: 'info',
+      category: 'button',
+      message: 'Top bar delete items button clicked',
+      data: {
+        currentFolderId: currentFolderId,
+      },
+    });
     moveItemsToTrash(selectedItems);
   };
 
@@ -359,24 +409,6 @@ const DriveExplorer = (props: DriveExplorerProps): JSX.Element => {
       dispatch(uiActions.setIsShareItemDialogOpen(true));
     }
   };
-
-  const [fakePaginationLimit, setFakePaginationLimit] = useState<number>(PAGINATION_LIMIT);
-
-  useEffect(() => {
-    setHasMoreItems(true);
-    setFakePaginationLimit(PAGINATION_LIMIT);
-  }, [currentFolderId]);
-
-  // Fake backend pagination - change when pagination in backend has been implemented
-  const getMoreItems = () => {
-    const existsMoreItems = items.length > fakePaginationLimit;
-
-    setHasMoreItems(existsMoreItems);
-    if (existsMoreItems) setFakePaginationLimit(fakePaginationLimit + PAGINATION_LIMIT);
-  };
-
-  const getLimitedItems = () => items.slice(0, fakePaginationLimit);
-  const itemsList = getLimitedItems();
 
   const onSelectedOneItemRename = (e): void => {
     e.stopPropagation();
@@ -595,6 +627,7 @@ const DriveExplorer = (props: DriveExplorerProps): JSX.Element => {
       <EditFolderNameDialog />
       <UploadItemsFailsDialog />
       <MenuItemToGetSize />
+      <BannerWrapper />
 
       <div className="z-0 flex h-full w-full max-w-full flex-grow">
         <div className="flex w-1 flex-grow flex-col">
@@ -868,9 +901,9 @@ const DriveExplorer = (props: DriveExplorerProps): JSX.Element => {
               <div className="flex flex-grow flex-col justify-between overflow-hidden">
                 <ViewModeComponent
                   folderId={currentFolderId}
-                  items={isTrash ? items : itemsList}
-                  isLoading={isLoading}
-                  onEndOfScroll={isTrash ? getMoreTrashItems : getMoreItems}
+                  items={items}
+                  isLoading={isTrash ? isLoadingTrashItems : isLoading}
+                  onEndOfScroll={fetchItems}
                   hasMoreItems={hasMoreItems}
                   isTrash={isTrash}
                   onHoverListItems={(areHovered) => setIsListElementsHovered(areHovered)}
@@ -998,6 +1031,15 @@ const uploadItems = async (props: DriveExplorerProps, rootList: IRoot[], files: 
 
   if (countTotalItemsToUpload < UPLOAD_ITEMS_LIMIT) {
     if (files.length) {
+      errorService.addBreadcrumb({
+        level: 'info',
+        category: 'drag-and-drop',
+        message: 'Dragged file to upload',
+        data: {
+          currentFolderId: currentFolderId,
+          itemsDragged: items,
+        },
+      });
       const unrepeatedUploadedFiles = handleRepeatedUploadingFiles(files, items, dispatch) as File[];
       // files where dragged directly
       await dispatch(
@@ -1011,6 +1053,15 @@ const uploadItems = async (props: DriveExplorerProps, rootList: IRoot[], files: 
       );
     }
     if (rootList.length) {
+      errorService.addBreadcrumb({
+        level: 'info',
+        category: 'drag-and-drop',
+        message: 'Dragged folder to upload',
+        data: {
+          currentFolderId: currentFolderId,
+          itemsDragged: items,
+        },
+      });
       const unrepeatedUploadedFolders = handleRepeatedUploadingFolders(rootList, items, dispatch) as IRoot[];
       if (unrepeatedUploadedFolders.length > 0)
         await dispatch(
