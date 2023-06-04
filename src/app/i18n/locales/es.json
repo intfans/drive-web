@@ -915,6 +915,12 @@
     "copyLink": "Copiar enlace"
   },
   "drive": {
+    "itemNotFoundDialog": {
+      "folderTitle": "Carpeta no encontrada",
+      "folderText": "Asegúrate de que la URL es correcta y de que la carpeta no se ha movido o eliminado.",
+      "fileTitle": "Archivo no encontrado",
+      "fileText": "Asegúrate de que la URL es correcta y de que el archivo no se ha movido o eliminado."
+    },
     "usage": "Uso",
     "currentPlan": "Actual plan",
     "previewNoAvailable": "No hay vista previa disponible",

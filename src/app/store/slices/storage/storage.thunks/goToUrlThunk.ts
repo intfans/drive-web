@@ -15,10 +15,16 @@ export const goToUrlThunk = createAsyncThunk<void, UrlPath, { state: RootState }
       const storageClient = SdkFactory.getInstance().createStorageClient();
       const [responsePromise] = storageClient.getFolderContent(folderId);
 
-      responsePromise.then((response) => {
-        const folderName = response.name;
-        dispatch(storageThunks.goToFolderThunk({ name: folderName, id: folderId }));
-      });
+      responsePromise
+        .then((response) => {
+          const folderName = response.name;
+          dispatch(storageThunks.goToFolderThunk({ name: folderName, id: folderId }));
+        })
+        .catch((error) => {
+          if (error.message === 'Folder not found') {
+            dispatch(uiActions.setIsItemNotFoundDialogOpen(true));
+          }
+        });
     }
 
     if (path.type === 'file') {
@@ -27,21 +33,25 @@ export const goToUrlThunk = createAsyncThunk<void, UrlPath, { state: RootState }
       const [responsePromise] = storageClient.getFile(fileId);
       let fileItem;
 
-      responsePromise.then((response) => {
-        const parentId = response.folderId;
-        const fileId = response.id;
+      responsePromise
+        .then((response) => {
+          const parentId = response.folderId;
+          const fileId = response.id;
 
-        const storageClient = SdkFactory.getInstance().createStorageClient();
-        const [responsePromise] = storageClient.getFolderContent(parentId);
+          const storageClient = SdkFactory.getInstance().createStorageClient();
+          const [responsePromise] = storageClient.getFolderContent(parentId);
 
-        responsePromise.then((response) => {
-          const folderName = response.name;
-          fileItem = response.files.find((item) => item.id === fileId);
-          dispatch(storageThunks.goToFolderThunk({ name: folderName, id: parentId }));
-          dispatch(uiActions.setIsFileViewerOpen(true));
-          dispatch(uiActions.setFileViewerItem(fileItem));
+          responsePromise.then((response) => {
+            const folderName = response.name;
+            fileItem = response.files.find((item) => item.id === fileId);
+            dispatch(storageThunks.goToFolderThunk({ name: folderName, id: parentId }));
+            dispatch(uiActions.setIsFileViewerOpen(true));
+            dispatch(uiActions.setFileViewerItem(fileItem));
+          });
+        })
+        .catch(() => {
+          dispatch(uiActions.setIsItemNotFoundDialogOpen(true));
         });
-      });
     }
   },
 );

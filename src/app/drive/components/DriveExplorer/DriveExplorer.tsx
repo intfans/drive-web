@@ -76,6 +76,7 @@ import SkinSkeletonItem from '../../../shared/components/List/SkinSketelonItem';
 import errorService from '../../../core/services/error.service';
 import { fetchPaginatedFolderContentThunk } from '../../../store/slices/storage/storage.thunks/fetchFolderContentThunk';
 import BannerWrapper from 'app/banners/BannerWrapper';
+import ItemNotFoundDialog from 'app/drive/components/itemNotFoundDialog/itemNotFoundDialog';
 
 const PAGINATION_LIMIT = 50;
 const TRASH_PAGINATION_OFFSET = 50;
@@ -198,6 +199,7 @@ const DriveExplorer = (props: DriveExplorerProps): JSX.Element => {
     },
   );
 
+  const [itemType, setItemType] = useState('');
   const currentUrl = window.location.pathname;
   const isDriveItemClicked = useAppSelector((state: RootState) => state.ui.isDriveItemClicked);
 
@@ -210,6 +212,7 @@ const DriveExplorer = (props: DriveExplorerProps): JSX.Element => {
       const itemId = pathUrl[1];
 
       if (itemType === 'file' || itemType === 'folder') {
+        setItemType(itemType);
         dispatch(storageThunks.goToUrlThunk({ id: itemId, type: itemType }));
       }
     }
@@ -633,6 +636,7 @@ const DriveExplorer = (props: DriveExplorerProps): JSX.Element => {
       <UploadItemsFailsDialog />
       <MenuItemToGetSize />
       <BannerWrapper />
+      <ItemNotFoundDialog itemType={itemType} />
 
       <div className="z-0 flex h-full w-full max-w-full flex-grow">
         <div className="flex w-1 flex-grow flex-col">

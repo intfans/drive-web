@@ -932,6 +932,12 @@
     "copyLink": "Copy link"
   },
   "drive": {
+    "itemNotFoundDialog": {
+      "folderTitle": "Folder not found",
+      "folderText": "Make sure that the URL is correct and the folder hasn't been moved or deleted.",
+      "fileTitle": "File not found",
+      "fileText": "Make sure that the URL is correct and the file hasn't been moved or deleted."
+    },
     "usage": "Usage",
     "currentPlan": "Current plan",
     "loadingFile": "Loading preview",
