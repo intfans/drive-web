@@ -5,10 +5,11 @@ import { RootState } from '../../..';
 import { UrlPath } from '../../../../drive/types';
 import { SdkFactory } from '../../../../core/factory/sdk';
 import storageThunks from '../storage.thunks';
+import { uiActions } from 'app/store/slices/ui';
 
 export const goToUrlThunk = createAsyncThunk<void, UrlPath, { state: RootState }>(
   'storage/goToUrlThunk',
-  async (path: UrlPath, { getState, dispatch }) => {
+  async (path: UrlPath, { dispatch }) => {
     if (path.type === 'folder') {
       const folderId = Number(path.id);
       const storageClient = SdkFactory.getInstance().createStorageClient();
@@ -17,6 +18,29 @@ export const goToUrlThunk = createAsyncThunk<void, UrlPath, { state: RootState }
       responsePromise.then((response) => {
         const folderName = response.name;
         dispatch(storageThunks.goToFolderThunk({ name: folderName, id: folderId }));
+      });
+    }
+
+    if (path.type === 'file') {
+      const fileId = String(path.id);
+      const storageClient = SdkFactory.getNewApiInstance().createNewStorageClient();
+      const [responsePromise] = storageClient.getFile(fileId);
+      let fileItem;
+
+      responsePromise.then((response) => {
+        const parentId = response.folderId;
+        const fileId = response.id;
+
+        const storageClient = SdkFactory.getInstance().createStorageClient();
+        const [responsePromise] = storageClient.getFolderContent(parentId);
+
+        responsePromise.then((response) => {
+          const folderName = response.name;
+          fileItem = response.files.find((item) => item.id === fileId);
+          dispatch(storageThunks.goToFolderThunk({ name: folderName, id: parentId }));
+          dispatch(uiActions.setIsFileViewerOpen(true));
+          dispatch(uiActions.setFileViewerItem(fileItem));
+        });
       });
     }
   },

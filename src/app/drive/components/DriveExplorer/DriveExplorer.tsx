@@ -199,16 +199,21 @@ const DriveExplorer = (props: DriveExplorerProps): JSX.Element => {
   );
 
   const currentUrl = window.location.pathname;
+  const isDriveItemClicked = useAppSelector((state: RootState) => state.ui.isDriveItemClicked);
 
   useEffect(() => {
-    const splitUrl = currentUrl.split('/');
-    const pathUrl = splitUrl.slice(-2);
-    const itemType = pathUrl[0];
-    const itemId = pathUrl[1];
+    if (!isDriveItemClicked) {
+      dispatch(uiActions.setIsFileViewerOpen(false));
+      const splitUrl = currentUrl.split('/');
+      const pathUrl = splitUrl.slice(-2);
+      const itemType = pathUrl[0];
+      const itemId = pathUrl[1];
 
-    if (itemType === 'file' || itemType === 'folder') {
-      dispatch(storageThunks.goToUrlThunk({ id: itemId, type: itemType }));
+      if (itemType === 'file' || itemType === 'folder') {
+        dispatch(storageThunks.goToUrlThunk({ id: itemId, type: itemType }));
+      }
     }
+    dispatch(uiActions.setIsDriveItemClicked(false));
   }, [currentUrl]);
 
   useEffect(() => {
