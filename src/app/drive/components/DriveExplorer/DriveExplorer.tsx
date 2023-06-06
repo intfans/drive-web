@@ -215,7 +215,12 @@ const DriveExplorer = (props: DriveExplorerProps): JSX.Element => {
         setItemType(itemType);
         dispatch(storageThunks.goToUrlThunk({ id: itemId, type: itemType }));
       }
+
+      if (itemId === 'drive') {
+        dispatch(storageThunks.goToFolderThunk(props.namePath[0]));
+      }
     }
+
     dispatch(uiActions.setIsDriveItemClicked(false));
   }, [currentUrl]);
 

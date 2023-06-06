@@ -184,13 +184,21 @@ const useDriveItemActions = (item: DriveItemData): DriveItemActions => {
   };
 
   const onItemDoubleClicked = (): void => {
+    const currentUrl = window.location.pathname;
+    const splitUrl = currentUrl.split('/');
+    const pathUrl = splitUrl.slice(-2);
+
     if (item.isFolder) {
-      dispatch(uiActions.setIsDriveItemClicked(true));
-      window.history.pushState(null, '', `/drive/folder/${item.id}`);
+      if (pathUrl[0] === 'folder' || pathUrl[1] === 'drive') {
+        dispatch(uiActions.setIsDriveItemClicked(true));
+        window.history.pushState(null, '', `/drive/folder/${item.id}`);
+      }
       dispatch(storageThunks.goToFolderThunk({ name: item.name, id: item.id }));
     } else {
-      dispatch(uiActions.setIsDriveItemClicked(true));
-      window.history.pushState(null, '', `/drive/file/${item.uuid}`);
+      if (pathUrl[0] === 'file' || pathUrl[1] === 'drive') {
+        dispatch(uiActions.setIsDriveItemClicked(true));
+        window.history.pushState(null, '', `/drive/file/${item.uuid}`);
+      }
       dispatch(uiActions.setIsFileViewerOpen(true));
       dispatch(uiActions.setFileViewerItem(item));
     }

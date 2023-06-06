@@ -49,7 +49,12 @@ class DriveView extends Component<DriveViewProps> {
         icon: null, //<UilHdd className="w-4 h-4 mr-1" />
         active: true,
         isFirstPath: true,
-        onClick: () => dispatch(storageThunks.goToFolderThunk(firstPath)),
+        onClick: () => {
+          if (namePath.length > 1) {
+            window.history.pushState(null, '', '/drive');
+            dispatch(storageThunks.goToFolderThunk(firstPath));
+          }
+        },
       });
       namePath.slice(1).forEach((path: FolderPath, i: number, namePath: FolderPath[]) => {
         items.push({

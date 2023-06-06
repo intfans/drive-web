@@ -13,9 +13,9 @@ export const goToUrlThunk = createAsyncThunk<void, UrlPath, { state: RootState }
     if (path.type === 'folder') {
       const folderId = Number(path.id);
       const storageClient = SdkFactory.getInstance().createStorageClient();
-      const [responsePromise] = storageClient.getFolderContent(folderId);
+      const [responsePromiseFolder] = storageClient.getFolderContent(folderId);
 
-      responsePromise
+      responsePromiseFolder
         .then((response) => {
           const folderName = response.name;
           dispatch(storageThunks.goToFolderThunk({ name: folderName, id: folderId }));
@@ -30,18 +30,18 @@ export const goToUrlThunk = createAsyncThunk<void, UrlPath, { state: RootState }
     if (path.type === 'file') {
       const fileId = String(path.id);
       const storageClient = SdkFactory.getNewApiInstance().createNewStorageClient();
-      const [responsePromise] = storageClient.getFile(fileId);
+      const [responsePromiseFile] = storageClient.getFile(fileId);
       let fileItem;
 
-      responsePromise
+      responsePromiseFile
         .then((response) => {
           const parentId = response.folderId;
           const fileId = response.id;
 
           const storageClient = SdkFactory.getInstance().createStorageClient();
-          const [responsePromise] = storageClient.getFolderContent(parentId);
+          const [responsePromiseFolder] = storageClient.getFolderContent(parentId);
 
-          responsePromise.then((response) => {
+          responsePromiseFolder.then((response) => {
             const folderName = response.name;
             fileItem = response.files.find((item) => item.id === fileId);
             dispatch(storageThunks.goToFolderThunk({ name: folderName, id: parentId }));
