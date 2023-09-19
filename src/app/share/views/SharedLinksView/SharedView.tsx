@@ -6,7 +6,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import iconService from 'app/drive/services/icon.service';
 import copy from 'copy-to-clipboard';
 import Empty from '../../../shared/components/Empty/Empty';
-import emptyStateIcon from 'assets/icons/file-types/default.svg';
+import folderEmptyImage from 'assets/icons/light/folder-open.svg';
 import shareService, { decryptMnemonic } from '../../../share/services/share.service';
 import notificationsService, { ToastType } from '../../../notifications/services/notifications.service';
 import _ from 'lodash';
@@ -721,16 +721,19 @@ export default function SharedView(): JSX.Element {
 
   const emptyState = (
     <Empty
-      icon={
-        <div className="relative">
-          <img className="w-36" alt="" src={emptyStateIcon} />
-          <div className=" absolute -bottom-1 right-2 flex h-10 w-10 flex-col items-center justify-center rounded-full bg-primary text-white shadow-subtle-hard ring-8 ring-primary ring-opacity-10">
-            <Users size={24} />
-          </div>
-        </div>
+      icon={<img className="w-36" alt="" src={folderEmptyImage} />}
+      title={translate('views.recents.empty.folderEmpty')}
+      subtitle={translate('views.recents.empty.folderEmptySubtitle')}
+      action={
+        isCurrentUserViewer()
+          ? undefined
+          : {
+              icon: UploadSimple,
+              style: 'elevated',
+              text: translate('views.recents.empty.uploadFiles'),
+              onClick: onUploadFileButtonClicked,
+            }
       }
-      title={translate('shared-links.empty-state.title')}
-      subtitle={translate('shared-links.empty-state.subtitle')}
     />
   );
 
