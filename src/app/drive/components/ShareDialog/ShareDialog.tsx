@@ -40,6 +40,7 @@ interface InvitedUserProps {
   roleName: UserRole;
   uuid: string;
   sharingId: string;
+  role: Role;
 }
 
 interface RequestProps {
@@ -109,10 +110,19 @@ const ShareDialog = (props: ShareDialogProps): JSX.Element => {
   };
 
   useEffect(() => {
-    const OWNER_ROLE = { id: 'NONE', name: 'owner' };
+    const FIRST_DATES = {
+      createdAt: new Date('1900-08-11T09:02:56.307Z'),
+      updatedAt: new Date('1900-08-11T09:02:56.307Z'),
+    };
+    const OWNER_ROLE = {
+      id: 'NONE',
+      name: 'owner',
+      ...FIRST_DATES,
+    } as Role;
+
     if (isOpen) {
       getSharingRoles().then((roles) => {
-        setRoles([...roles, OWNER_ROLE]);
+        setRoles([...(roles as Role[]), OWNER_ROLE]);
         setInviteDialogRoles(roles);
       });
     }
@@ -154,9 +164,14 @@ const ShareDialog = (props: ShareDialogProps): JSX.Element => {
       const invitedUsersListParsed = invitedUsersList['users'].map((user) => ({
         ...user,
         roleName: roles.find((role) => role.id === user.role.id)?.name.toLowerCase(),
+        role: {
+          ...user.role,
+          createdAt: user.role.name === 'OWNER' ? new Date('1900-08-11T09:02:56.307Z') : user.role.createdAt,
+          updatedAt: user.role.name === 'OWNER' ? new Date('1900-08-11T09:02:56.307Z') : user.role.updatedAt,
+        },
       }));
 
-      setInvitedUsers(invitedUsersListParsed);
+      setInvitedUsers(sortInvitedList(invitedUsersListParsed));
     } catch (error) {
       errorService.reportError(error);
     }
@@ -320,6 +335,14 @@ const ShareDialog = (props: ShareDialogProps): JSX.Element => {
     if (userOptions.current) {
       userOptions.current.click();
     }
+  };
+
+  const sortInvitedList = (list: InvitedUserProps[]): InvitedUserProps[] => {
+    return list.sort((a, b) => {
+      const dateA = new Date(a.role.updatedAt);
+      const dateB = new Date(b.role.updatedAt);
+      return dateA.getTime() - dateB.getTime();
+    });
   };
 
   const Header = (headerProps: ViewProps): JSX.Element => {
