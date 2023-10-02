@@ -1,5 +1,4 @@
-import { login } from './login';
-import 'cypress-axe';
+import { loginHelper } from './pages/login-helper';
 require('cypress-downloadfile/lib/downloadFileCommand');
 //
 // -- This is a parent command --
@@ -7,9 +6,9 @@ require('cypress-downloadfile/lib/downloadFileCommand');
 Cypress.Commands.add('Login', (email, password) => {
   //cy.session('Login',()=>{
   cy.visit('/');
-  email && login.writeEmail(email);
-  password && login.writePassword(password);
-  login.clickSignIn();
+  email && loginHelper.writeEmail(email);
+  password && loginHelper.writePassword(password);
+  loginHelper.clickSignIn();
   //})
 });
 //

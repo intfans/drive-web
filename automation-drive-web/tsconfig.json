@@ -1,21 +1,12 @@
 {
-  "include": ["./node_modules/cypress", "cypress/**/*", "global.d.ts"],
   "compilerOptions": {
-    "target": "es5",
-    "lib": ["es5", "dom"],
-    "types": ["cypress", "node", "cypress-axe"],
-    "resolveJsonModule": true,
-    "esModuleInterop": true
+      "types": ["cypress", "node"],
+      "paths": {
+          "@pages/*": ["./cypress/support/pages/*"],
+          "@data/*": ["./cypress/fixtures/data/*"],
+          "@utils": ["./cypress/support/utils/*"],
+      }
   },
-
-  "reporterEnabled": "spec, mocha-junit-reporter, mochawesome",
-  "mochaJunitReporterReporterOptions": {
-    "mochaFile": "reports/test-results.xml",
-    "toConsole": false,
-    "outputs": true,
-    "testCaseSwitchClassnameAndName": true
-  },
-  "mochawesomeReporterReporterOptions": {
-    "mochaFile": "mochawesome.json"
-  }
+  "include": ["**/*.ts","cypress.d.ts"],
+  "exclude": ["node_modules"]
 }
