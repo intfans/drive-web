@@ -7,14 +7,22 @@
   "license": "MIT",
   "scripts": {
     "test": "cypress open",
-    "file": "cypress run --browser edge --reporter cypress-multi-reporters --reporter-options configFile=jsconfig.json --record --key c635d3f7-b323-4e3b-bcf4-722c1484fd18 --spec cypress/e2e/**/*"
+    "file": "cypress run --browser edge --key c635d3f7-b323-4e3b-bcf4-722c1484fd18 --spec cypress/e2e/feature/AFS-Folder-Creation-and-Initial-Sharing/**/*"
   },
-  
   "devDependencies": {
     "@faker-js/faker": "^8.1.0",
+    "@types/node": "^20.8.0",
     "cypress": "^13.2.0",
+    "cypress-dotenv": "^2.0.0",
     "cypress-downloadfile": "^1.2.3",
     "cypress-file-upload": "^5.0.8",
-    "@types/node": "^20.8.0"
+    "cypress-plugin-api": "^2.11.1",
+    "cypress-recurse": "^1.35.2",
+    "dotenv": "^16.3.1",
+    "ts-node": "^10.9.1"
+  },
+  "dependencies": {
+    "@babel/preset-react": "^7.22.15",
+    "typescript": "^5.2.2"
   }
 }

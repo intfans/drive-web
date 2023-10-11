@@ -1,8 +1,9 @@
 {
-  "accounts": {
-    "main": "maintestaccount@inxt.com",
-    "editor": "editoraccount@inxt.com",
-    "reader": "readeraccount@inxt.com"
-  },
-  "password": "test123."
-}
+    "urls": {
+      "app": "https://staging.drive.internxt.com/app"
+    },
+    "assertion":{
+      "invitationSentReader": "Successful sharing with readeraccount@inxt.com",
+      "invitationSentEditor": "Successful sharing with testaccounteditor@inxt.com"
+    }
+  }

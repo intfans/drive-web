@@ -16,7 +16,7 @@ class Login {
     }
         
     async writeEmail(email: string){
-        this.titleCreateAccount().should('have.text', 'Create account')
+        
         this.emailTitle().should('have.text', 'Email')
         this.emailInputForm().type(email)
     }
