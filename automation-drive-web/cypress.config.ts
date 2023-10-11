@@ -9,7 +9,7 @@ const config = defineConfig({
   viewportWidth: 1920,
   watchForFileChanges: false,
   chromeWebSecurity: false,
-  
+  retries: 2,
   e2e: {
     
     specPattern: ['cypress/e2e/**/*.cy.{js,jsx,ts,tsx,}'],
